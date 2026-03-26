@@ -1,0 +1,22 @@
+{
+  "name": "tsbooking",
+  "version": "1.0.0",
+  "description": "Automated software testing of Booking",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  },
+  "private": true,
+  "keywords": [
+    "booking"
+  ],
+  "author": "Anastasiia",
+  "license": "ISC",
+  "dependencies": {np
+    "@playwright/test": "^1.52.0",
+    "prettier": "^3.5.3"
+  }
+}

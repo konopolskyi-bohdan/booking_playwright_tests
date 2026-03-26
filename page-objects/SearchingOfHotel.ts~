@@ -1,0 +1,48 @@
+import { Expect, Locator, Page} from '@playwright/test'
+
+export class OccupancyPopup {
+    private popup: Locator
+
+    constructor(private page: Page) {
+        this.popup = page.locator('#occupancy-popup')
+    }
+
+    async setOccupancy({ adults = 2, children = 0, rooms = 1 }) {
+        await expect(this.popup).toBeVisible()
+        await this.setValue('Adults', adults)
+        await this.setValue('Children', children)
+        await this.setValue('Rooms', rooms)
+
+        const doneButton = this.popup.getByRole('button', { name: /done/i })
+        if (await doneButton.isVisible()) {
+            await doneButton.click()
+        } else {
+            await this.page.keyboard.press('Escape')
+        }
+    }
+
+    private async setValue(labelText: string, target: number) {
+        const section = this.popup.getByRole('group', { name: labelText })
+        const valueInput = section.locator('input[type="text"]')
+        const plusBtn = section.getByRole('button', { name: '+' })
+        const minusBtn = section.getByRole('button', { name: '-' })
+
+        let currentValue = parseInt(await valueInput.inputValue(), 10)
+
+        while (currentValue < target) {
+            await plusBtn.click()
+            currentValue = parseInt(await valueInput.inputValue(), 10)
+        }
+
+        while (currentValue > target) {
+            await minusBtn.click()
+            currentValue = parseInt(await valueInput.inputValue(), 10)
+        }
+    }
+
+    async addPeople(section: Locator, times: number) {
+        for (let i = 0; i < times; i++) {
+            await section.locator('button').nth(1).click()
+        }
+    }
+}

@@ -1,0 +1,27 @@
+import { test, expect } from '@playwright/test'
+import { PopupsPage } from '../page-objects/PopupsPage'
+import { HomePage} from '../page-objects/HomePage'
+import { CurrencyChangePage } from '../page-objects/CurrencyChangePage'
+
+let homePage: HomePage
+let popupsPage: PopupsPage
+let currencyChangePage: CurrencyChangePage
+
+test("Currency change", async ({page}) => {
+        homePage = new HomePage(page)
+        popupsPage = new PopupsPage(page)
+        currencyChangePage = new CurrencyChangePage(page)
+
+        await homePage.visit()
+        await popupsPage.handleAllPopups()
+        await popupsPage.closeSignInPopupIfVisible()
+
+        const currencySelector = new CurrencyChangePage(page)
+
+        await currencySelector.expectCurrencyIs('UAH')
+        await currencySelector.openCurrencyMenu()
+        await currencySelector.selectCurrency('Euro EUR')
+        await currencySelector.expectCurrencyIs('EUR')
+
+        await currencyChangePage.expectAllHotelsHaveEuroCurrency()
+        })
