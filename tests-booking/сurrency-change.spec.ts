@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
-import { PopupsPage } from '../page-objects/PopupsPage'
-import { HomePage} from '../page-objects/HomePage'
-import { CurrencyChangePage } from '../page-objects/CurrencyChangePage'
+import { PopupsPage } from '../pages/PopupsPage'
+import { HomePage} from '../pages/HomePage'
+import { CurrencyChangePage } from '../pages/CurrencyChangePage'
+import { closeAllPopups } from '../utils'
 
 let homePage: HomePage
 let popupsPage: PopupsPage
@@ -13,8 +14,7 @@ test("Currency change", async ({page}) => {
         currencyChangePage = new CurrencyChangePage(page)
 
         await homePage.visit()
-        await popupsPage.handleAllPopups()
-        await popupsPage.closeSignInPopupIfVisible()
+        await closeAllPopups(popupsPage)
 
         const currencySelector = new CurrencyChangePage(page)
 

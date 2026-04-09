@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
-import { PopupsPage } from '../page-objects/PopupsPage'
-import { HomePage} from '../page-objects/HomePage'
-import { LocalizationPage } from '../page-objects/LocalizationPage'
+import { PopupsPage } from '../pages/PopupsPage'
+import { HomePage} from '../pages/HomePage'
+import { LocalizationPage } from '../pages/LocalizationPage'
+import { closeAllPopups } from '../utils'
 
 let homePage: HomePage
 let popupsPage: PopupsPage
@@ -13,15 +14,13 @@ test ("Localization change", async ({ page }) => {
     localizationPage = new LocalizationPage(page)
 
     await homePage .visit()
-    await popupsPage.handleAllPopups()
-    await popupsPage.closeSignInPopupIfVisible()
+    await closeAllPopups(popupsPage)
 
     await localizationPage.openLanguageMenu()
     await localizationPage.logAllLanguages()
     await localizationPage.logCurrentLanguage()
     await localizationPage.changeLanguageTo('Español')
-    await popupsPage.handleAllPopups()
-    await popupsPage.closeSignInPopupIfVisible()
+    await closeAllPopups(popupsPage)
     await localizationPage.expectLanguageChangedTo('Español')
 
     // перевіряємо, що мова змінилась (краще перевірити aria-label або текст)

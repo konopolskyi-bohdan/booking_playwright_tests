@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
-import { PopupsPage } from '../page-objects/PopupsPage'
-import { HomePage} from '../page-objects/HomePage'
-import { FlightPage } from '../page-objects/FlightPage'
+import { PopupsPage } from '../pages/PopupsPage'
+import { HomePage} from '../pages/HomePage'
+import { FlightPage } from '../pages/FlightPage'
+import { closeAllPopups } from '../utils'
 
 let homePage: HomePage
 let popupsPage: PopupsPage
@@ -13,12 +14,10 @@ test.only ("Searching of avia ticket", async ({ page }) => {
     flightPage = new FlightPage(page)
 
     await homePage.visit()
-    await popupsPage.handleAllPopups()
-    await popupsPage.closeSignInPopupIfVisible()
+    await closeAllPopups(popupsPage)
 
     await flightPage.flightsPage.click()
-    await popupsPage.handleAllPopups()
-    await popupsPage.closeSignInPopupIfVisible()
+    await closeAllPopups(popupsPage)
 
     await page.pause()
     await flightPage.fromField.click()

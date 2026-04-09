@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
-import { PopupsPage } from '../page-objects/PopupsPage'
-import { HomePage} from '../page-objects/HomePage'
-import { SearchResultsPage } from '../page-objects/SearchResultsPage'
+import { PopupsPage } from '../pages/PopupsPage'
+import { HomePage} from '../pages/HomePage'
+import { SearchResultsPage } from '../pages/SearchResultsPage'
+import { closeAllPopups } from '../utils'
 
 let homePage: HomePage
 let popupsPage: PopupsPage
@@ -14,15 +15,13 @@ test ("Searshing of a hotel on Booking.com", async ({ page }) => {
     const resultsPage = new SearchResultsPage(page)
 
     await homePage.visit()
-    await popupsPage.handleAllPopups()
-    await popupsPage.closeSignInPopupIfVisible()
+    await closeAllPopups(popupsPage)
 
     await homePage.enterDestination('Kyiv')
     await homePage.selectDates('2025-07-01', '2025-08-01')
     await homePage.clickOnSearchButton()
 
-    await popupsPage.handleAllPopups()
-    await popupsPage.closeSignInPopupIfVisible()
+    await closeAllPopups(popupsPage)
     await resultsPage.isLoaded()
     await resultsPage.expectAllAddressesContain('Kyiv')
     await resultsPage.expectAllGuestLabelsContain('2 adults')
